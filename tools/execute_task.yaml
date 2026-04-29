@@ -1,0 +1,73 @@
+identity:
+  name: execute_task
+  author: bazhauyu-team
+  label:
+    en_US: Execute Task
+    zh_Hans: 执行任务
+description:
+  human:
+    en_US: Validate parameters, create a cloud scraping task, and start it.
+    zh_Hans: 校验参数、创建云采集任务并启动。
+  llm: Execute a Bazhuayu template. First call search_templates, then use recommendedTemplate.templateName. Use validateOnly=true before creating a real task when parameters are uncertain.
+parameters:
+  - name: templateName
+    type: string
+    required: true
+    label:
+      en_US: Template Name
+      zh_Hans: 模板名称
+    human_description:
+      en_US: Template name returned by search_templates.
+      zh_Hans: search_templates 返回的模板名称。
+    llm_description: Use recommendedTemplate.templateName, template.templateName, or templates[].templateName from search_templates.
+    form: llm
+  - name: taskName
+    type: string
+    required: false
+    label:
+      en_US: Task Name
+      zh_Hans: 任务名称
+    human_description:
+      en_US: Optional friendly task name.
+      zh_Hans: 可选任务名称。
+    llm_description: Optional friendly task name. Useful for long-running task recovery.
+    form: llm
+  - name: parameters
+    type: string
+    required: false
+    label:
+      en_US: Parameters JSON
+      zh_Hans: 参数 JSON
+    human_description:
+      en_US: JSON object whose keys match inputSchema[].field returned by search_templates or validateOnly.
+      zh_Hans: JSON 对象，字段名应匹配 search_templates 或 validateOnly 返回的 inputSchema[].field。
+    llm_description: JSON object string. Use inputSchema[].field as keys. MultiInput values must be string arrays, e.g. {"SearchKeyword":["iphone"]}.
+    form: llm
+  - name: targetMaxRows
+    type: number
+    required: false
+    min: 0
+    max: 1000000
+    label:
+      en_US: Target Max Rows
+      zh_Hans: 目标最大行数
+    human_description:
+      en_US: Optional target row threshold. Use 0 or omit to run naturally.
+      zh_Hans: 可选目标行数阈值。填 0 或省略表示自然运行。
+    llm_description: Optional. Use a positive number to request stopping after extracted count reaches the threshold. Use 0 or omit for natural completion.
+    form: llm
+  - name: validateOnly
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Validate Only
+      zh_Hans: 仅校验
+    human_description:
+      en_US: Validate template and parameters without creating a task.
+      zh_Hans: 仅校验模板和参数，不创建任务。
+    llm_description: Set true to validate templateName and parameters before creating or starting a task.
+    form: llm
+extra:
+  python:
+    source: tools/execute_task.py

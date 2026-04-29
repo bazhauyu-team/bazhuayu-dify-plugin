@@ -1,0 +1,73 @@
+identity:
+  name: export_data
+  author: bazhauyu-team
+  label:
+    en_US: Export Data
+    zh_Hans: 导出数据
+description:
+  human:
+    en_US: Check task progress and export structured task data.
+    zh_Hans: 查询任务进度并导出结构化采集数据。
+  llm: Export data for a taskId returned by execute_task or an existing Bazhuayu task. If the task is still running, wait and call again.
+parameters:
+  - name: taskId
+    type: string
+    required: true
+    label:
+      en_US: Task ID
+      zh_Hans: 任务 ID
+    human_description:
+      en_US: Task id returned by execute_task or an existing Bazhuayu task id.
+      zh_Hans: execute_task 返回的任务 ID 或已有八爪鱼任务 ID。
+    llm_description: Task id from execute_task or an existing Bazhuayu task.
+    form: llm
+  - name: exportFileType
+    type: select
+    required: false
+    default: JSON
+    label:
+      en_US: Export File Type
+      zh_Hans: 导出文件类型
+    human_description:
+      en_US: Output file type.
+      zh_Hans: 导出文件类型。
+    llm_description: Optional. Supported values are JSON, CSV, EXCEL, HTML, XML.
+    options:
+      - value: JSON
+        label:
+          en_US: JSON
+          zh_Hans: JSON
+      - value: CSV
+        label:
+          en_US: CSV
+          zh_Hans: CSV
+      - value: EXCEL
+        label:
+          en_US: Excel
+          zh_Hans: Excel
+      - value: HTML
+        label:
+          en_US: HTML
+          zh_Hans: HTML
+      - value: XML
+        label:
+          en_US: XML
+          zh_Hans: XML
+    form: llm
+  - name: previewRows
+    type: number
+    required: false
+    default: 5
+    min: 0
+    max: 20
+    label:
+      en_US: Preview Rows
+      zh_Hans: 预览行数
+    human_description:
+      en_US: Number of preview rows to return. Set 0 to skip sample rows.
+      zh_Hans: 返回的预览行数。填 0 表示不返回样例行。
+    llm_description: Optional preview row count. Default 5. Set 0 to skip sampleData.
+    form: llm
+extra:
+  python:
+    source: tools/export_data.py

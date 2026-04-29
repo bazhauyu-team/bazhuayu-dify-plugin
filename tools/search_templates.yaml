@@ -1,0 +1,75 @@
+identity:
+  name: search_templates
+  author: bazhauyu-team
+  label:
+    en_US: Search Templates
+    zh_Hans: 搜索模板
+description:
+  human:
+    en_US: Search Bazhuayu cloud-runnable scraping templates.
+    zh_Hans: 搜索八爪鱼可云端运行的采集模板。
+  llm: Search Bazhuayu templates by keyword, exact template id, or slug. Use recommendedTemplate.templateName from the result before calling execute_task.
+parameters:
+  - name: keyword
+    type: string
+    required: false
+    label:
+      en_US: Keyword
+      zh_Hans: 关键词
+    human_description:
+      en_US: Topic, website, or use-case keyword.
+      zh_Hans: 主题、网站或使用场景关键词。
+    llm_description: Use for topic, site, or use-case search. Do not combine with id or slug.
+    form: llm
+  - name: id
+    type: number
+    required: false
+    label:
+      en_US: Template ID
+      zh_Hans: 模板 ID
+    human_description:
+      en_US: Exact template id lookup.
+      zh_Hans: 按模板 ID 精确查找。
+    llm_description: Exact template id lookup. Do not combine with keyword or slug.
+    form: llm
+  - name: slug
+    type: string
+    required: false
+    label:
+      en_US: Template Slug
+      zh_Hans: 模板 Slug
+    human_description:
+      en_US: Exact template slug or alias lookup.
+      zh_Hans: 按模板 slug 或别名精确查找。
+    llm_description: Exact template slug or alias lookup. Do not combine with keyword or id.
+    form: llm
+  - name: page
+    type: number
+    required: false
+    default: 1
+    min: 1
+    label:
+      en_US: Page
+      zh_Hans: 页码
+    human_description:
+      en_US: 1-based page number for keyword search.
+      zh_Hans: 关键词搜索的页码，从 1 开始。
+    llm_description: Keyword mode only. 1-based page number.
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 8
+    min: 1
+    max: 50
+    label:
+      en_US: Limit
+      zh_Hans: 数量
+    human_description:
+      en_US: Maximum templates per page.
+      zh_Hans: 每页返回的模板数量。
+    llm_description: Keyword mode only. Max templates per page. Default 8.
+    form: llm
+extra:
+  python:
+    source: tools/search_templates.py

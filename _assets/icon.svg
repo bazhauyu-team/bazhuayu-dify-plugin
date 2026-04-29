@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Bazhuayu">
+  <rect width="128" height="128" rx="28" fill="#1f7aff"/>
+  <circle cx="64" cy="46" r="24" fill="#ffffff"/>
+  <circle cx="54" cy="42" r="5" fill="#1f7aff"/>
+  <circle cx="74" cy="42" r="5" fill="#1f7aff"/>
+  <path d="M47 58c9 8 25 8 34 0" fill="none" stroke="#1f7aff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M33 78c11 1 17-5 20-14M53 82c7-2 10-9 11-18M75 82c-7-2-10-9-11-18M95 78c-11 1-17-5-20-14" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+</svg>
