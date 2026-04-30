@@ -93,18 +93,33 @@ oauth_schema:
   credentials_schema:
     - name: access_token
       type: secret-input
+      label:
+        en_US: Access Token
+        zh_Hans: 访问令牌
     - name: refresh_token
       type: secret-input
+      label:
+        en_US: Refresh Token
+        zh_Hans: 刷新令牌
     - name: token_type
       type: text-input
+      label:
+        en_US: Token Type
+        zh_Hans: 令牌类型
     - name: expires_at
       type: secret-input
+      label:
+        en_US: Expires At
+        zh_Hans: 过期时间
     - name: mcp_server_url
       type: text-input
+      label:
+        en_US: MCP Server URL
+        zh_Hans: MCP Server 地址
 tools:
   - tools/search_templates.yaml
   - tools/execute_task.yaml
   - tools/export_data.yaml
 extra:
   python:
-    source: bazhuayu.py
+    source: provider/bazhuayu.py
