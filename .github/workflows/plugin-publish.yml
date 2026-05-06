@@ -45,9 +45,26 @@ jobs:
           curl -L -o dify-plugin-linux-amd64 "https://github.com/langgenius/dify-plugin-daemon/releases/download/0.5.8/dify-plugin-linux-amd64"
           chmod +x dify-plugin-linux-amd64
 
+      - name: Prepare package directory
+        run: |
+          mkdir -p dist/plugin
+          cp -R \
+            .env.example \
+            LICENSE \
+            PRIVACY.md \
+            README.md \
+            _assets \
+            main.py \
+            manifest.yaml \
+            provider \
+            requirements.txt \
+            tools \
+            utils \
+            dist/plugin/
+
       - name: Package plugin
         run: |
-          ./dify-plugin-linux-amd64 plugin package . --output_path "${{ steps.meta.outputs.plugin_name }}-${{ steps.meta.outputs.version }}.difypkg"
+          ./dify-plugin-linux-amd64 plugin package dist/plugin --output_path "${{ steps.meta.outputs.plugin_name }}-${{ steps.meta.outputs.version }}.difypkg"
 
       - name: Checkout marketplace fork
         uses: actions/checkout@v4
