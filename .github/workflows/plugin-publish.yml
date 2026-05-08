@@ -26,6 +26,7 @@ jobs:
     env:
       MARKETPLACE_REPO: langgenius/dify-plugins
       FORK_REPO: bazhauyu-team/dify-plugins
+      UPSTREAM_REPO: langgenius/dify-plugins
     steps:
       - name: Checkout plugin source
         uses: actions/checkout@v4
@@ -72,6 +73,7 @@ jobs:
           repository: ${{ env.FORK_REPO }}
           token: ${{ secrets.PLUGIN_ACTION }}
           path: dify-plugins
+          fetch-depth: 0
 
       - name: Copy package into marketplace fork
         run: |
@@ -85,8 +87,14 @@ jobs:
           BRANCH="bump-${{ steps.meta.outputs.plugin_name }}-plugin-${{ steps.meta.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B "$BRANCH"
+          git remote add upstream "https://github.com/${UPSTREAM_REPO}.git"
+          git fetch upstream main
+          git checkout -B "$BRANCH" upstream/main
           git add "${{ steps.meta.outputs.author }}/${{ steps.meta.outputs.plugin_name }}/${{ steps.meta.outputs.plugin_name }}-${{ steps.meta.outputs.version }}.difypkg"
+          if git diff --cached --quiet; then
+            echo "No package changes to publish."
+            exit 0
+          fi
           git commit -m "Add ${{ steps.meta.outputs.plugin_name }} plugin ${{ steps.meta.outputs.version }}"
           git push origin "$BRANCH" --force
 
@@ -102,4 +110,9 @@ jobs:
             --base main \
             --title "Add ${{ steps.meta.outputs.plugin_name }} plugin ${{ steps.meta.outputs.version }}" \
             --body "Automated Dify plugin package update for ${{ steps.meta.outputs.plugin_name }} ${{ steps.meta.outputs.version }}." \
-          || true
+          || gh pr list \
+            --repo "${MARKETPLACE_REPO}" \
+            --head "${{ steps.meta.outputs.author }}:${BRANCH}" \
+            --state open \
+            --json url \
+            --jq '.[0].url'
