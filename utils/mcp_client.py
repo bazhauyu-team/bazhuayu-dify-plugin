@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 from typing import Any
@@ -103,7 +104,7 @@ class BazhuayuMcpClient:
 
     def _headers(self) -> dict[str, str]:
         headers = {
-            "Accept": "application/json",
+            "Accept": "application/json, text/event-stream",
             "Content-Type": "application/json",
         }
         if self.api_key:
@@ -118,9 +119,11 @@ class BazhuayuMcpClient:
         try:
             data = response.json()
         except ValueError as exc:
-            raise BazhuayuMcpError(
-                f"MCP server returned non-JSON response: HTTP {response.status_code}"
-            ) from exc
+            data = _decode_sse_response(response.text)
+            if data is None:
+                raise BazhuayuMcpError(
+                    f"MCP server returned non-JSON response: HTTP {response.status_code}"
+                ) from exc
 
         if response.status_code >= 400:
             message = _extract_error_message(data) or response.text
@@ -164,4 +167,18 @@ def _extract_error_message(data: Any) -> str | None:
         message = data.get("message")
         if message:
             return str(message)
+    return None
+
+
+def _decode_sse_response(text: str) -> dict[str, Any] | None:
+    for line in text.splitlines():
+        if not line.startswith("data:"):
+            continue
+        payload = line.removeprefix("data:").strip()
+        if not payload:
+            continue
+        try:
+            return json.loads(payload)
+        except ValueError:
+            continue
     return None
