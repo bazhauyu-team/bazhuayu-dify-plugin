@@ -49,7 +49,7 @@ jobs:
       - name: Prepare package directory
         run: |
           mkdir -p dist/plugin
-          cp -R \
+          rsync -a --exclude='.DS_Store' \
             .env.example \
             LICENSE \
             PRIVACY.md \

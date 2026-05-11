@@ -38,58 +38,7 @@ credentials_for_provider:
       en_US: Bazhuayu Streamable HTTP MCP endpoint.
       zh_Hans: 八爪鱼 Streamable HTTP MCP 入口地址。
 oauth_schema:
-  client_schema:
-    - name: client_id
-      type: text-input
-      required: true
-      default: BazhuayuWeb_2023
-      label:
-        en_US: OAuth Client ID
-        zh_Hans: OAuth Client ID
-    - name: client_secret
-      type: secret-input
-      required: true
-      default: "*"
-      label:
-        en_US: OAuth Client Secret
-        zh_Hans: OAuth Client Secret
-      placeholder:
-        en_US: "*"
-        zh_Hans: "*"
-    - name: authorization_url
-      type: text-input
-      required: true
-      default: https://identity.bazhuayu.com/connect/authorize
-      label:
-        en_US: Authorization URL
-        zh_Hans: 授权地址
-      placeholder:
-        en_US: https://identity.bazhuayu.com/connect/authorize
-        zh_Hans: https://identity.bazhuayu.com/connect/authorize
-    - name: token_url
-      type: text-input
-      required: true
-      default: https://identity.bazhuayu.com/connect/token
-      label:
-        en_US: Token URL
-        zh_Hans: Token 地址
-      placeholder:
-        en_US: https://identity.bazhuayu.com/connect/token
-        zh_Hans: https://identity.bazhuayu.com/connect/token
-    - name: scope
-      type: text-input
-      required: false
-      default: openid profile offline_access
-      label:
-        en_US: OAuth Scope
-        zh_Hans: OAuth Scope
-    - name: mcp_server_url
-      type: text-input
-      required: false
-      default: https://mcp.bazhuayu.com/
-      label:
-        en_US: MCP Server URL
-        zh_Hans: MCP Server 地址
+  client_schema: []
   credentials_schema:
     - name: access_token
       type: secret-input

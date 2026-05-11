@@ -49,16 +49,7 @@ This reuses the API key path already implemented by the Bazhuayu MCP server.
 
 ### OAuth
 
-Configure the OAuth client in Dify:
-
-```text
-client_id: BazhuayuWeb_2023
-client_secret: *
-authorization_url
-token_url
-scope
-mcp_server_url
-```
+Use the default OAuth client in Dify.
 
 Dify handles user authorization and token refresh. The plugin then calls the MCP server with:
 

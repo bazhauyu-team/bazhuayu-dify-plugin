@@ -16,7 +16,12 @@ from dify_plugin.errors.tool import (
 from utils.mcp_client import BazhuayuMcpClient
 
 
+CLIENT_ID = "DifyMCP"
+CLIENT_SECRET = "*"
+AUTHORIZATION_URL = "https://identity.bazhuayu.com/connect/authorize"
+TOKEN_URL = "https://identity.bazhuayu.com/connect/token"
 DEFAULT_SCOPE = "openid profile offline_access"
+MCP_SERVER_URL = "https://mcp.bazhuayu.com/"
 
 
 class BazhuayuProvider(ToolProvider):
@@ -32,16 +37,15 @@ class BazhuayuProvider(ToolProvider):
         redirect_uri: str,
         system_credentials: Mapping[str, Any],
     ) -> str:
-        authorization_url = _required(system_credentials, "authorization_url")
         params = {
-            "client_id": _required(system_credentials, "client_id"),
+            "client_id": CLIENT_ID,
             "redirect_uri": redirect_uri,
             "response_type": "code",
-            "scope": system_credentials.get("scope") or DEFAULT_SCOPE,
+            "scope": DEFAULT_SCOPE,
             "access_type": "offline",
             "prompt": "consent",
         }
-        return f"{authorization_url}?{urllib.parse.urlencode(params)}"
+        return f"{AUTHORIZATION_URL}?{urllib.parse.urlencode(params)}"
 
     def _oauth_get_credentials(
         self,
@@ -59,10 +63,10 @@ class BazhuayuProvider(ToolProvider):
             raise ToolProviderOAuthError("Authorization code not provided")
 
         token_data = _post_token(
-            _required(system_credentials, "token_url"),
+            TOKEN_URL,
             {
-                "client_id": _required(system_credentials, "client_id"),
-                "client_secret": _required(system_credentials, "client_secret"),
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
                 "code": code,
                 "grant_type": "authorization_code",
                 "redirect_uri": redirect_uri,
@@ -71,7 +75,7 @@ class BazhuayuProvider(ToolProvider):
 
         credentials, expires_at = _build_oauth_credentials(
             token_data,
-            fallback_mcp_server_url=system_credentials.get("mcp_server_url"),
+            fallback_mcp_server_url=MCP_SERVER_URL,
         )
         return ToolOAuthCredentials(credentials=credentials, expires_at=expires_at)
 
@@ -86,10 +90,10 @@ class BazhuayuProvider(ToolProvider):
             raise ToolProviderOAuthError("No refresh token available")
 
         token_data = _post_token(
-            _required(system_credentials, "token_url"),
+            TOKEN_URL,
             {
-                "client_id": _required(system_credentials, "client_id"),
-                "client_secret": _required(system_credentials, "client_secret"),
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
                 "refresh_token": refresh_token,
                 "grant_type": "refresh_token",
             },
@@ -98,8 +102,7 @@ class BazhuayuProvider(ToolProvider):
         new_credentials, expires_at = _build_oauth_credentials(
             token_data,
             fallback_refresh_token=str(refresh_token),
-            fallback_mcp_server_url=credentials.get("mcp_server_url")
-            or system_credentials.get("mcp_server_url"),
+            fallback_mcp_server_url=credentials.get("mcp_server_url") or MCP_SERVER_URL,
         )
         return ToolOAuthCredentials(credentials=new_credentials, expires_at=expires_at)
 
