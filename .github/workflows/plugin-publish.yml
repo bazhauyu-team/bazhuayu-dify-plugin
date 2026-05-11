@@ -75,12 +75,6 @@ jobs:
           path: dify-plugins
           fetch-depth: 0
 
-      - name: Copy package into marketplace fork
-        run: |
-          TARGET_DIR="dify-plugins/${{ steps.meta.outputs.author }}/${{ steps.meta.outputs.plugin_name }}"
-          mkdir -p "$TARGET_DIR"
-          cp "${{ steps.meta.outputs.plugin_name }}-${{ steps.meta.outputs.version }}.difypkg" "$TARGET_DIR/"
-
       - name: Commit and push package
         working-directory: dify-plugins
         run: |
@@ -90,6 +84,9 @@ jobs:
           git remote add upstream "https://github.com/${UPSTREAM_REPO}.git"
           git fetch upstream main
           git checkout -B "$BRANCH" upstream/main
+          TARGET_DIR="${{ steps.meta.outputs.author }}/${{ steps.meta.outputs.plugin_name }}"
+          mkdir -p "$TARGET_DIR"
+          cp "../${{ steps.meta.outputs.plugin_name }}-${{ steps.meta.outputs.version }}.difypkg" "$TARGET_DIR/"
           git add "${{ steps.meta.outputs.author }}/${{ steps.meta.outputs.plugin_name }}/${{ steps.meta.outputs.plugin_name }}-${{ steps.meta.outputs.version }}.difypkg"
           if git diff --cached --quiet; then
             echo "No package changes to publish."
