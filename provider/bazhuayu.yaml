@@ -69,6 +69,9 @@ tools:
   - tools/search_templates.yaml
   - tools/execute_task.yaml
   - tools/export_data.yaml
+  - tools/search_tasks.yaml
+  - tools/start_or_stop_task.yaml
+  - tools/redeem_coupon_code.yaml
 extra:
   python:
     source: provider/bazhuayu.py

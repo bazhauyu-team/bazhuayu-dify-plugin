@@ -1,10 +1,18 @@
 # Bazhuayu Dify Plugin
 
-This Dify tool plugin wraps the Bazhuayu Streamable HTTP MCP server and exposes a stable 3-tool scraping workflow inside Dify:
+This Dify tool plugin wraps the Bazhuayu Streamable HTTP MCP server and exposes Bazhuayu cloud scraping tools inside Dify.
 
-1. `search_templates`
-2. `execute_task`
-3. `export_data`
+It supports the core scraping workflow:
+
+1. `search_templates` - find a cloud-runnable scraping template
+2. `execute_task` - validate parameters, create a cloud task, and start it
+3. `export_data` - check progress and export structured data
+
+It also exposes task management and promotion helpers:
+
+4. `search_tasks` - search existing cloud tasks
+5. `start_or_stop_task` - start or stop an existing task
+6. `redeem_coupon_code` - redeem a Bazhuayu coupon or promotion code
 
 ## How it works
 
@@ -28,7 +36,7 @@ BAZHUAYU_MCP_SERVER_URL=https://mcp.bazhuayu.com/
 
 ## Authentication
 
-The plugin supports both credential modes.
+The plugin supports API key and OAuth credential modes.
 
 ### API Key
 
@@ -49,7 +57,17 @@ This reuses the API key path already implemented by the Bazhuayu MCP server.
 
 ### OAuth
 
-Use the default OAuth client in Dify.
+Click **Add OAuth** in Dify to authorize your Bazhuayu account.
+
+The plugin uses the Bazhuayu OAuth client:
+
+```text
+client_id: DifyMCP
+client_secret: *
+authorization_url: https://identity.bazhuayu.com/connect/authorize
+token_url: https://identity.bazhuayu.com/connect/token
+scope: openid profile offline_access
+```
 
 Dify handles user authorization and token refresh. The plugin then calls the MCP server with:
 
@@ -119,6 +137,65 @@ Supported export types:
 
 ```text
 JSON, CSV, EXCEL, HTML, XML
+```
+
+### `search_tasks`
+
+Search existing Bazhuayu cloud tasks.
+
+Typical input:
+
+```json
+{
+  "keyword": "amazon",
+  "page": 1,
+  "size": 10
+}
+```
+
+You can also filter by status:
+
+```json
+{
+  "status": "Running"
+}
+```
+
+Supported status values:
+
+```text
+Running, Stopped, Completed, Failed
+```
+
+### `start_or_stop_task`
+
+Start or stop an existing Bazhuayu cloud task.
+
+Typical input:
+
+```json
+{
+  "taskId": "your-task-id",
+  "action": "start"
+}
+```
+
+Supported actions:
+
+```text
+start, stop
+```
+
+### `redeem_coupon_code`
+
+Redeem a Bazhuayu coupon or promotion code.
+
+Typical input:
+
+```json
+{
+  "code": "RESOURCE_TMPL_01"
+}
 ```
 
 ## Development

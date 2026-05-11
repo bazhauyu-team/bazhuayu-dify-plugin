@@ -48,13 +48,12 @@ jobs:
 
       - name: Prepare package directory
         run: |
-          mkdir -p dist/plugin
+          mkdir -p dist/plugin/_assets
           rsync -a --exclude='.DS_Store' \
             .env.example \
             LICENSE \
             PRIVACY.md \
             README.md \
-            _assets \
             main.py \
             manifest.yaml \
             provider \
@@ -62,6 +61,7 @@ jobs:
             tools \
             utils \
             dist/plugin/
+          cp _assets/icon.svg dist/plugin/_assets/icon.svg
 
       - name: Package plugin
         run: |

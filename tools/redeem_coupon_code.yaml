@@ -1,0 +1,26 @@
+identity:
+  name: redeem_coupon_code
+  author: bazhauyu-team
+  label:
+    en_US: Redeem Coupon Code
+    zh_Hans: 兑换优惠码
+description:
+  human:
+    en_US: Redeem a Bazhuayu coupon or promotion code.
+    zh_Hans: 兑换八爪鱼优惠码或活动码。
+  llm: Redeem a user-provided Bazhuayu coupon or promotion code. Ask the user for the code if it is missing.
+parameters:
+  - name: code
+    type: string
+    required: true
+    label:
+      en_US: Coupon Code
+      zh_Hans: 优惠码
+    human_description:
+      en_US: Coupon or promotion code to redeem.
+      zh_Hans: 要兑换的优惠码或活动码。
+    llm_description: Required coupon or promotion code, for example RESOURCE_TMPL_01.
+    form: llm
+extra:
+  python:
+    source: tools/redeem_coupon_code.py

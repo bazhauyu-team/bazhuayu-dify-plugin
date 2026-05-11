@@ -1,0 +1,46 @@
+identity:
+  name: start_or_stop_task
+  author: bazhauyu-team
+  label:
+    en_US: Start or Stop Task
+    zh_Hans: 启动或停止任务
+description:
+  human:
+    en_US: Start or stop an existing Bazhuayu cloud task.
+    zh_Hans: 启动或停止已有八爪鱼云任务。
+  llm: Start or stop an existing task by taskId. Use search_tasks first if the user provides a task name instead of a taskId.
+parameters:
+  - name: taskId
+    type: string
+    required: true
+    label:
+      en_US: Task ID
+      zh_Hans: 任务 ID
+    human_description:
+      en_US: Existing Bazhuayu task ID.
+      zh_Hans: 已有八爪鱼任务 ID。
+    llm_description: Existing Bazhuayu task ID. Use taskId from search_tasks or execute_task.
+    form: llm
+  - name: action
+    type: select
+    required: true
+    label:
+      en_US: Action
+      zh_Hans: 操作
+    human_description:
+      en_US: Start or stop the task.
+      zh_Hans: 启动或停止任务。
+    llm_description: Required. Use start to start the task, or stop to stop it.
+    options:
+      - value: start
+        label:
+          en_US: Start
+          zh_Hans: 启动
+      - value: stop
+        label:
+          en_US: Stop
+          zh_Hans: 停止
+    form: llm
+extra:
+  python:
+    source: tools/start_or_stop_task.py

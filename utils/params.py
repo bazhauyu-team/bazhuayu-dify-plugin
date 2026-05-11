@@ -42,3 +42,21 @@ def parse_json_object(value: Any) -> dict[str, Any]:
     if not isinstance(parsed, dict) or isinstance(parsed, list):
         raise ValueError("parameters must be a JSON object")
     return parsed
+
+
+def parse_json_array(value: Any) -> list[Any] | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, list):
+        return value
+    if not isinstance(value, str):
+        raise ValueError("value must be a JSON array string")
+
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"value is not valid JSON: {exc.msg}") from exc
+
+    if not isinstance(parsed, list):
+        raise ValueError("value must be a JSON array")
+    return parsed

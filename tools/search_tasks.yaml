@@ -1,0 +1,92 @@
+identity:
+  name: search_tasks
+  author: bazhauyu-team
+  label:
+    en_US: Search Tasks
+    zh_Hans: 搜索任务
+description:
+  human:
+    en_US: Search existing Bazhuayu cloud tasks by keyword, status, or task IDs.
+    zh_Hans: 按关键词、状态或任务 ID 搜索已有八爪鱼云任务。
+  llm: Search existing Bazhuayu tasks. Use this before start_or_stop_task when the user refers to an existing task by name or status.
+parameters:
+  - name: page
+    type: number
+    required: false
+    default: 1
+    min: 1
+    label:
+      en_US: Page
+      zh_Hans: 页码
+    human_description:
+      en_US: 1-based page number.
+      zh_Hans: 页码，从 1 开始。
+    llm_description: Optional 1-based page number. Default 1.
+    form: llm
+  - name: size
+    type: number
+    required: false
+    default: 10
+    min: 1
+    max: 100
+    label:
+      en_US: Page Size
+      zh_Hans: 每页数量
+    human_description:
+      en_US: Number of tasks per page.
+      zh_Hans: 每页返回的任务数量。
+    llm_description: Optional page size. Default 10, max 100.
+    form: llm
+  - name: keyword
+    type: string
+    required: false
+    label:
+      en_US: Keyword
+      zh_Hans: 关键词
+    human_description:
+      en_US: Search text for task name or related task content.
+      zh_Hans: 用于搜索任务名称或相关任务内容的文本。
+    llm_description: Optional search string for task name or related task text.
+    form: llm
+  - name: status
+    type: select
+    required: false
+    label:
+      en_US: Status
+      zh_Hans: 状态
+    human_description:
+      en_US: Optional task status filter.
+      zh_Hans: 可选任务状态过滤。
+    llm_description: Optional. Supported values are Running, Stopped, Completed, Failed.
+    options:
+      - value: Running
+        label:
+          en_US: Running
+          zh_Hans: 运行中
+      - value: Stopped
+        label:
+          en_US: Stopped
+          zh_Hans: 已停止
+      - value: Completed
+        label:
+          en_US: Completed
+          zh_Hans: 已完成
+      - value: Failed
+        label:
+          en_US: Failed
+          zh_Hans: 失败
+    form: llm
+  - name: taskIds
+    type: string
+    required: false
+    label:
+      en_US: Task IDs JSON
+      zh_Hans: 任务 ID JSON
+    human_description:
+      en_US: Optional JSON array of task IDs.
+      zh_Hans: 可选任务 ID JSON 数组。
+    llm_description: Optional JSON array string of task IDs, e.g. ["task-id-1","task-id-2"].
+    form: llm
+extra:
+  python:
+    source: tools/search_tasks.py
