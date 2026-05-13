@@ -116,6 +116,7 @@ class BazhuayuMcpClient:
         return headers
 
     def _decode_response(self, response: requests.Response) -> dict[str, Any]:
+        _prefer_utf8_for_sse(response)
         try:
             data = response.json()
         except ValueError as exc:
@@ -170,15 +171,55 @@ def _extract_error_message(data: Any) -> str | None:
     return None
 
 
+def _prefer_utf8_for_sse(response: requests.Response) -> None:
+    content_type = response.headers.get("Content-Type", "")
+    if "text/event-stream" in content_type.lower() and "charset=" not in content_type.lower():
+        response.encoding = "utf-8"
+
+
 def _decode_sse_response(text: str) -> dict[str, Any] | None:
-    for line in text.splitlines():
-        if not line.startswith("data:"):
-            continue
-        payload = line.removeprefix("data:").strip()
+    for event in _iter_sse_events(text):
+        payload = event.strip()
         if not payload:
             continue
         try:
-            return json.loads(payload)
+            return json.loads(payload, strict=False)
         except ValueError:
             continue
     return None
+
+
+def _iter_sse_events(text: str) -> list[str]:
+    events: list[str] = []
+    data_lines: list[str] = []
+
+    def flush() -> None:
+        if data_lines:
+            events.append("\n".join(data_lines))
+            data_lines.clear()
+
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip("\r")
+        if line == "":
+            flush()
+            continue
+        if line.startswith("data:"):
+            data_lines.append(_sse_field_value(line))
+            continue
+        if line.startswith(":"):
+            continue
+        if data_lines and not _is_non_data_sse_field(line):
+            data_lines.append(line)
+
+    flush()
+    return events
+
+
+def _sse_field_value(line: str) -> str:
+    value = line.removeprefix("data:")
+    return value[1:] if value.startswith(" ") else value
+
+
+def _is_non_data_sse_field(line: str) -> bool:
+    field, separator, _ = line.partition(":")
+    return bool(separator) and field in {"event", "id", "retry"}

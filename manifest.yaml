@@ -1,4 +1,4 @@
-version: 0.0.4
+version: 0.0.5
 type: plugin
 author: bazhauyu-team
 name: bazhuayu
@@ -22,7 +22,7 @@ plugins:
   tools:
     - provider/bazhuayu.yaml
 meta:
-  version: 0.0.4
+  version: 0.0.5
   arch:
     - amd64
     - arm64
